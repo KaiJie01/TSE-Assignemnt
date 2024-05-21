@@ -1,4 +1,5 @@
-import tkinter as ttk
+import tkinter as tk
+from tkinter import Tk, Entry, Text, Button, ttk
 import customtkinter
 import config
 import os
@@ -31,75 +32,37 @@ def clearFrame():
 
 def dentistrecord():
     clearFrame()
-    searchframe = customtkinter.CTkFrame(master=tabviewouterframe)
-    searchframe.grid(row=0, column=0, padx=(0, 0), pady=(20, 0), sticky="nsew")
-    searchframe.grid_columnconfigure(2, weight=1)
-
-    searchlabel = customtkinter.CTkLabel(searchframe, text="Search: ",font=("Arial", 12, "bold"))
-    searchlabel.grid(row=0, column=0, padx=(10, 5), pady=10, sticky=customtkinter.W)
-
-    searchbar = customtkinter.CTkEntry(searchframe, width=200)
-    searchbar.grid(row=0, column=1, padx=(0, 5), pady=10, sticky=customtkinter.NW)
-
-    leftbtn = customtkinter.CTkButton(master=searchframe,corner_radius=0, height=40, border_spacing=10, text="",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=leftbtn_image, anchor="w",width=10)
-    leftbtn.grid(row=0, column=3, padx=(0, 0), pady=(0, 0), sticky="ne")
-
-    rightbtn = customtkinter.CTkButton(master=searchframe,corner_radius=0, height=40, border_spacing=10, text="",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=rightbtn_image, anchor="w", width=10)
-    rightbtn.grid(row=0, column=4, padx=(0, 0), pady=(0, 0), sticky="ne")
     select_all_dentists = "select * from dentists"
     dentistrecords = sql_conn._selectall(select_all_dentists)
-    headers = ["DentistID", "FirstName", "LastName", "Specialty", "PhoneNumber", "Email", "OfficeAddress", "City", "State", "ZipCode"]
-    for col, header in enumerate(headers):
-        label = customtkinter.CTkLabel(tabviewframe, text=header, font=("Arial", 12, "bold"))
-        label.grid(row=0, column=col, padx=10, pady=5)
-    widths = [100, 100, 100,100, 100, 100,100, 100, 100,100]
-    for row, row_data in enumerate(dentistrecords, start=1):
-        for col, value in enumerate(row_data):
-            entry = customtkinter.CTkEntry(tabviewframe, width=widths[col])
-            entry.insert(ttk.END, value)
-            entry.grid(row=row, column=col,
-                       padx=10, pady=5)
+    headers = ["DentistID", "FirstName", "LastName", "Specialty", "PhoneNumber", "Email", "OfficeAddress", "City",
+               "State", "ZipCode"]
+    table = ttk.Treeview(tabviewframe, columns=headers, show="headings", height=200)
+    for column in headers:
+        table.heading(column=column, text=column)
+        table.column(column=column, width=200)
+    for row_data in dentistrecords:
+        table.insert(parent="", index="end", values=row_data)
+    table.grid(padx=10, pady=5)
+    style = ttk.Style()
+    style.theme_use("default")
+    style.configure("Treeview", background="gray", fieldbackground="gray", foreground="white")
 
 def patientsrecord():
     clearFrame()
-    searchframe = customtkinter.CTkFrame(master=tabviewouterframe)
-    searchframe.grid(row=0, column=0, padx=(0, 0), pady=(20, 0), sticky="nsew")
-    searchframe.grid_columnconfigure(2, weight=1)
-
-    searchlabel = customtkinter.CTkLabel(searchframe, text="Search: ",font=("Arial", 12, "bold"))
-    searchlabel.grid(row=0, column=0, padx=(10, 5), pady=10, sticky=customtkinter.W)
-
-    searchbar = customtkinter.CTkEntry(searchframe, width=200)
-    searchbar.grid(row=0, column=1, padx=(0, 5), pady=10, sticky=customtkinter.NW)
-
-    leftbtn = customtkinter.CTkButton(master=searchframe,corner_radius=0, height=40, border_spacing=10, text="",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=leftbtn_image, anchor="w",width=10)
-    leftbtn.grid(row=0, column=3, padx=(0, 0), pady=(0, 0), sticky="ne")
-
-    rightbtn = customtkinter.CTkButton(master=searchframe,corner_radius=0, height=40, border_spacing=10, text="",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=rightbtn_image, anchor="w", width=10)
-    rightbtn.grid(row=0, column=4, padx=(0, 0), pady=(0, 0), sticky="ne")
-
     select_all_patients = "select * from patients"
     patientrecords = sql_conn._selectall(select_all_patients)
     headers = ["PatientID", "FirstName", "LastName", "DateOfBirth", "Gender", "PhoneNumber", "Email", "Address",
                    "City", "State", "ZipCode"]
-    for col, header in enumerate(headers):
-        label = customtkinter.CTkLabel(tabviewframe, text=header, font=("Arial", 12, "bold"))
-        label.grid(row=1, column=col, padx=10, pady=5)
-    widths = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100,100]
-    for row, row_data in enumerate(patientrecords, start=1):
-        for col, value in enumerate(row_data):
-            entry = customtkinter.CTkEntry(tabviewframe, width=widths[col])
-            entry.insert(ttk.END, value)
-            entry.grid(row=row+1, column=col,
-                       padx=10, pady=5)
+    table = ttk.Treeview(tabviewframe, columns=headers, show="headings", height=200)
+    for column in headers:
+        table.heading(column=column, text=column)
+        table.column(column=column, width=200)
+    for row_data in patientrecords:
+        table.insert(parent="", index="end", values=row_data)
+    table.grid(padx=10, pady=5)
+    style = ttk.Style()
+    style.theme_use("default")
+    style.configure("Treeview", background="gray", fieldbackground="gray", foreground="white")
 
     #tableview = CTkTable(tabviewframe, row=1, column=10, values=dentistrecords, wraplength=100)
     #tableview.pack(expand=True, fill="both", padx=0, pady=0)
@@ -154,9 +117,26 @@ tabviewframe = customtkinter.CTkScrollableFrame(master=tabviewouterframe, orient
 tabviewframe.grid(row=1, column=0, padx=(0, 0), pady=(20, 0), sticky="nsew", ipady=200)
 tabviewframe.grid_columnconfigure(0, weight=1)
 
+searchframe = customtkinter.CTkFrame(master=tabviewouterframe)
+searchframe.grid(row=0, column=0, padx=(0, 0), pady=(20, 0), sticky="nsew")
+searchframe.grid_columnconfigure(2, weight=1)
 
+searchlabel = customtkinter.CTkLabel(searchframe, text="Search: ", font=("Arial", 12, "bold"))
+searchlabel.grid(row=0, column=0, padx=(10, 5), pady=10, sticky=customtkinter.W)
 
+searchbar = customtkinter.CTkEntry(searchframe, width=200)
+searchbar.grid(row=0, column=1, padx=(0, 5), pady=10, sticky=customtkinter.NW)
 
+leftbtn = customtkinter.CTkButton(master=searchframe, corner_radius=0, height=40, border_spacing=10, text="",
+                                  fg_color="transparent", text_color=("gray10", "gray90"),
+                                  hover_color=("gray70", "gray30"),
+                                  image=leftbtn_image, anchor="w", width=10)
+leftbtn.grid(row=0, column=3, padx=(0, 0), pady=(0, 0), sticky="ne")
 
+rightbtn = customtkinter.CTkButton(master=searchframe, corner_radius=0, height=40, border_spacing=10, text="",
+                                   fg_color="transparent", text_color=("gray10", "gray90"),
+                                   hover_color=("gray70", "gray30"),
+                                   image=rightbtn_image, anchor="w", width=10)
+rightbtn.grid(row=0, column=4, padx=(0, 0), pady=(0, 0), sticky="ne")
 
 root.mainloop()
